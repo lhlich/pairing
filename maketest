@@ -1,0 +1,2 @@
+ g++ -o scheme test.cpp arbitrary_precision.cpp ecc.cpp pairing.cpp
+

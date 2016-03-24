@@ -1,0 +1,141 @@
+#ifndef ECC_H
+#define ECC_H
+#include "arbitrary_precision.h"
+#define MODULO 131
+#define A 1
+#define B 0
+
+//curve y^2=x^3+x
+//embedded degree 2: field complex by i^2+1=0
+
+struct complex{//a+bi   a when ext=0
+	complex(){
+		a = apint(0);
+		b = apint(0);
+		ext = 0;
+	}
+
+	complex(const apint arg1, const apint arg2, bool arg3){
+		a=arg1;
+		b=arg2;
+		ext=arg3;
+	}
+
+	complex(const complex &obj){
+		a=obj.a;
+		b=obj.b;
+		ext = obj.ext;
+	}
+
+	complex& operator=(const complex& obj){
+		a = obj.a;
+		b = obj.b;
+		ext = obj.ext;
+
+		return *this;
+	}
+
+	bool zero() const{
+		apint ZERO=apint(0);
+		if (a == ZERO )
+			if (!ext || b == ZERO)
+				return 1;
+
+		return 0;
+	}
+	complex operator+(const complex  &right);
+	complex operator-(const complex &right) const;
+	complex operator*(const complex &right);
+	complex pow(const apint &n);
+	complex inv() const;
+	complex operator/(const complex &b);
+	complex neg() const;
+	bool operator==(const complex &obj) const{
+		if (ext != obj.ext)return 0;
+		if (a != obj.a)return 0;
+		if (ext && b != obj.b)return 0;
+
+		return 1;
+	}
+
+	apint a;
+	apint b;
+	bool ext;//ext=FALSE means it is just a number
+};
+
+struct point{
+
+	point(){
+		x = complex();
+		y = complex();
+		id = 0;
+		P = modulo_arithmic(MODULO);
+	}
+	point(int cx, int cy){
+		x = complex(apint(cx), apint(0), 1);
+		y = complex(apint(cy), apint(0), 1);
+		id = 0;
+
+		P = modulo_arithmic(MODULO);
+	}
+
+	point(apint cx, apint cy){
+		x = complex(cx,apint(0),1);
+		y = complex(cy,apint(0),1);
+		id = 0;
+		P = modulo_arithmic(MODULO);
+	}
+	point(complex cx, complex cy){
+		x = cx;
+		y = cy;
+		id = 0;
+		P = modulo_arithmic(MODULO);
+	}
+	point(const point &obj){
+		x = obj.x;
+		y = obj.y;
+		id = obj.id;
+		P = modulo_arithmic(MODULO);
+	}
+	point& operator=(const point& obj){
+		x = obj.x;
+		y = obj.y;
+		id = obj.id;
+		P = modulo_arithmic(MODULO);
+
+		return *this;
+	}
+	operator point&(){return *this;}
+
+	bool on_curve(){
+		if (id)return 1;
+
+		complex op1 = x*x*x + x;
+		complex op2 = y*y;
+		if (op1==op2)return 1;
+		else return 0;
+	}
+
+	point operator+(const point &right) const;
+	point operator-(const point &right) const;
+	bool operator==(const point &right) const{
+		if (id && right.id) return 1;
+
+		if ((x == right.x) && (y == right.y) && (id==right.id)) return 1;
+		else
+			return 0;
+	}
+	point inv() const;
+
+	complex x;
+	complex y;
+	bool id;//identity O
+
+	modulo_arithmic P;
+
+};
+
+point operator*(const apint &s,const point &P); //point scalar multiplication
+point operator*(int s, const point &P); //point scalar multiplication
+
+#endif

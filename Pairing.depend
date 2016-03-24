@@ -1,0 +1,39 @@
+# depslib dependency file v1.0
+1458767770 source:c:\users\liujinshan\desktop\pairing\ecc.cpp
+	"header/ecc.h"
+
+1458767780 c:\users\liujinshan\desktop\pairing\header\ecc.h
+	"arbitrary_precision.h"
+
+1458762736 c:\users\liujinshan\desktop\pairing\header\arbitrary_precision.h
+
+1458768090 source:c:\users\liujinshan\desktop\pairing\main.cpp
+	"header/pairing.h"
+	<iostream>
+
+1458767737 c:\users\liujinshan\desktop\pairing\header\pairing.h
+	"ecc.h"
+
+1458768041 source:c:\users\liujinshan\desktop\pairing\pairing.cpp
+	"header/pairing.h"
+
+1458762736 source:c:\users\liujinshan\desktop\pairing\arbitrary_precision.cpp
+	"header/arbitrary_precision.h"
+
+1458767770 source:c:\users\liujinshan\desktop\pairingv_2.5\ecc.cpp
+	"header/ecc.h"
+
+1458767780 c:\users\liujinshan\desktop\pairingv_2.5\header\ecc.h
+	"arbitrary_precision.h"
+
+1458762736 c:\users\liujinshan\desktop\pairingv_2.5\header\arbitrary_precision.h
+
+1458768041 source:c:\users\liujinshan\desktop\pairingv_2.5\pairing.cpp
+	"header/pairing.h"
+
+1458767737 c:\users\liujinshan\desktop\pairingv_2.5\header\pairing.h
+	"ecc.h"
+
+1458762736 source:c:\users\liujinshan\desktop\pairingv_2.5\arbitrary_precision.cpp
+	"header/arbitrary_precision.h"
+

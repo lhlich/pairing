@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<BrowseTracker_layout_file>
+	<ActiveTarget name="Debug" />
+	<File name="arbitrary_precision.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="431" topLine="168" />
+	</File>
+	<File name="ecc.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="1077" topLine="180" />
+		<BrowseMarks positions="2123,2167" />
+	</File>
+	<File name="header\arbitrary_precision.h" open="1" top="0" tabpos="5">
+		<Cursor position="1472" topLine="45" />
+	</File>
+	<File name="header\ecc.h" open="1" top="0" tabpos="6">
+		<Cursor position="947" topLine="29" />
+	</File>
+	<File name="header\pairing.h" open="1" top="0" tabpos="7">
+		<Cursor position="428" topLine="0" />
+	</File>
+	<File name="main.cpp" open="1" top="1" tabpos="1">
+		<Cursor position="2205" topLine="115" />
+		<BrowseMarks positions="" />
+		<Book_Marks positions="" />
+	</File>
+	<File name="pairing.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="525" topLine="21" />
+	</File>
+</BrowseTracker_layout_file>

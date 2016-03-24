@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug" />
+	<File name="arbitrary_precision.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="431" topLine="126" />
+	</File>
+	<File name="ecc.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="2175" topLine="121" />
+	</File>
+	<File name="header\arbitrary_precision.h" open="1" top="0" tabpos="5">
+		<Cursor position="0" topLine="45" />
+	</File>
+	<File name="header\ecc.h" open="1" top="0" tabpos="6">
+		<Cursor position="2375" topLine="98" />
+	</File>
+	<File name="header\pairing.h" open="1" top="0" tabpos="7">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="main.cpp" open="1" top="1" tabpos="1">
+		<Cursor position="1877" topLine="109" />
+	</File>
+	<File name="pairing.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="0" topLine="0" />
+	</File>
+</CodeBlocks_layout_file>
