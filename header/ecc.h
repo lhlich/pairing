@@ -2,11 +2,13 @@
 #define ECC_H
 #include "arbitrary_precision.h"
 #define MODULO 59
+#define LIGHT 1
 #define A 1
 #define B 0
 
 //curve y^2=x^3+x
 //embedded degree 2: field complex by i^2+1=0
+modulo_arithmic getQ();
 
 struct complex{//a+bi   a when ext=0
 	complex(){
@@ -45,7 +47,7 @@ struct complex{//a+bi   a when ext=0
 	}
 	complex operator+(const complex  &right);
 	complex operator-(const complex &right) const;
-	complex operator*(const complex &right);
+	complex operator*(const complex &right) const;
 	complex pow(const apint &n);
 	complex inv() const;
 	complex operator/(const complex &b);
@@ -61,6 +63,7 @@ struct complex{//a+bi   a when ext=0
 	apint a;
 	apint b;
 	bool ext;//ext=FALSE means it is just a number
+	
 };
 
 struct point{

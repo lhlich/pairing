@@ -29,17 +29,23 @@ public:
 		delete[] data;
 	}
 
-	bool checkbit(int &pos) const;
+	bool checkbit(int pos) const;
+
 //	apint square();
 	apint operator+(const apint& right) const;
 	apint operator*(const apint& right) const;
 	apint div(const apint& right, apint &rem);
+	apint div(const apint& right){
+		apint rem;
+		return (*this).div(right,rem);	
+	}
 	apint operator-(const apint& right);//design for the case a>=b
 	bool operator>=(const apint& right) const;
 	bool operator==(const apint& right) const;
 	bool operator!=(const apint& right) const;
 
 	apint operator<<(const int& n) const;
+	apint operator>>(const int& n) const;
 	int bits() const;
 
 	void remove_prefix();
@@ -71,7 +77,6 @@ public:
 
 	void reduce(apint &x);
 
-private:
 	apint p;
 	//... and some stuff for precomputation.
 };

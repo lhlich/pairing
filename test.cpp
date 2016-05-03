@@ -2,19 +2,35 @@
 #include <iostream>
 #define HEXMODE 0
 using namespace std;
+ostream& operator<<(ostream& os, const apint & obj);
 
-void makepoint(point &P){
+point g0;
+void load_g0();
 
+void makepoint(point &P, apint &a,apint &b){
 
+	if(!LIGHT){
+		P=P.x.a*g0;
+		return;
+
+	}
+	
+	apint sq=getQ().p+apint(1);	
+	//cout<<sq<<","<<(sq>>2);
+	//cout<<sq<<endl;
+//	cout<<"making point...";	
+	
 	P.y = P.x.pow(apint(3)) + P.x;
-	P.y = P.y.pow(apint((MODULO + 1) / 4));
+	P.y = P.y.pow(sq>>2);
 
 	complex one(apint(1), apint(0), 1);
 
 	if (!P.on_curve()){
-		P.x = P.x + one;
-		makepoint(P);
-	}
+	//	cout<<"failed :/"<<endl;
+		P.x = P.x*complex(b,apint(0),1);
+		P.x = P.x+complex(a,apint(0),1);
+		makepoint(P,a,b);
+	}	
 
 }
 
@@ -25,7 +41,7 @@ ostream& operator<<(ostream& os, const apint & obj)
 		if (HEXMODE)os << hex;
 		os << obj.data[i];
 		if (i != obj.length - 1)
-			os << ',';
+			os << ' ';
 	}
 	return os;
 }
@@ -54,7 +70,19 @@ void test_apint();
 void test_ecc();
 void test_pairing();
 int main(){
+	
+	load_g0();
+	apint mod=getQ().p;
+	apint three(3);
 
+	int n=mod.bits();
+	cout<<"current modulo:"<<mod<<endl;
+	apint rem;
+
+//	mod.div(three,rem);
+
+	cout<<"q mod 4:"<<(2*mod.checkbit(n-1)+mod.checkbit(n))<<endl;
+//	cout<<"q mod 3:"<<rem<<endl;
 
 
 	test_apint();
@@ -90,31 +118,27 @@ void test_apint(){
 	cout << "y^2-x*y=" << s - r << endl;
 	cout << "(y-x)*y=" << (y - x)*y << endl;
 	cout << "y<<56=" << (y << 56) << endl;
-
-	y.bits();
-
-	apint rem;
-	apint q = y.div(apint(123121), rem);
-
-	modulo_arithmic Q(26);
-	x = Q.inv(apint(15));
+	
 }
 
 void test_ecc(){
+	
+	pairing E;
+	cout << "----------ECC test------------" << endl;
 	complex x(apint(25), apint(0), 1);
 	complex y(apint(30), apint(0), 1);
 
 	point P(x, y);
-	makepoint(P);
+	makepoint(P,E.r,E.h);
 
 
 	point Q(y, y);
-	makepoint(Q);
+	makepoint(Q,E.r,E.h);
 
 	bool t = P.on_curve();
 	t = Q.on_curve();
 
-	cout << "----------ECC test------------" << endl;
+
 	cout << "P:" << P << endl;
 	cout << "Q:" << Q << endl;
 	cout << "-Q:" << Q.inv() << endl;
@@ -135,7 +159,7 @@ void test_pairing(){
 	point P;
 
 	P.x = complex(apint(30), apint(0), 1);
-	makepoint(P);
+	makepoint(P,E.r,E.h);
 
 	P = E.h * P;
 
@@ -145,17 +169,17 @@ void test_pairing(){
 	while (!P.on_curve()){
 
 		P.x = P.x + one;
-		makepoint(P);
+		makepoint(P,E.r,E.h);
 		P = E.h * P;
 	}
 
 	point Q(2, 2);
-	makepoint(Q);
+	makepoint(Q,E.r,E.h);
 	Q=E.h*Q;
 	while (!Q.on_curve()){
 
 		Q.x = Q.x + one;
-		makepoint(Q);
+		makepoint(Q,E.r,E.h);
 		Q = E.h * Q;
 	}
 
@@ -167,17 +191,31 @@ void test_pairing(){
 	complex res = E.bi(P, Q);
 
 	cout << "----------pairing test------------" << endl;
+	cout << "system parameter" << endl;
+	cout << "q:" << getQ().p << endl;
+	cout << "r:" << E.r << endl;
+	cout << "h:" << E.h << endl;
+	cout << "-----------------------------------" << endl;
+
 	cout << "P:" << P << endl;
 	cout << "Q:" << Q << endl;
 	cout << "e(P,Q):" << res << endl;
 	cout << "e(P,Q)^3:" << res*res*res << endl;
 	cout << "[3]P:" << (3 * P) << endl;
 	cout << "e([3]P,Q):" << E.bi(3 * P, Q) << endl;
-	cout << "------------------------------" << endl;
+	cout << "-----------------------------------" << endl;
 
-	point M(25,30);
+	cout << "Preprocessing...";
+	pairing_pp pp(E, P);
+	cout << "Done!" << endl;
+	cout << "e(P,Q):" << E.bi(Q,pp) << endl;
+
+
+
+
+/*	point M(25,30);
 	point N(34,0);
-	N.y.b=apint(30);
+	N.y.b=apint(30);*/
 
 /*
 	cout << "M:" << M << endl;
@@ -186,4 +224,42 @@ void test_pairing(){
 	cout<<"Reduced:"<<E.tr(M,N).pow(E.qk1r)<<endl;
 */
 
+}
+
+void load_g0(){
+	if(LIGHT) return;
+
+//153bit xval
+	const char *xval="666285918909156579706577334448298316724907370077532163720911308141035224473899144233063713796722357570360597511749588023079703454150583408697678496165580";
+//154bit yval
+
+	const char* yval="8170329682717850087747595207221033944095934190074401412696905443236301073028440609121153197353941845696205713082179610663617373612405424702056538740290597";
+	
+	apint x=apint(0);
+	apint y=apint(0);
+
+	apint ten(10);
+	int i;
+	
+	cout<<"loading x for g0: ";
+	for(i=0;i<153;i++){
+		x=x*ten;
+		x=x+apint(xval[i]-'0');
+		cout<<xval[i];
+	}
+	cout<<endl;
+
+	cout<<"loading y for g0: ";
+	for(i=0;i<154;i++){
+		y=y*ten;
+		y=y+apint(yval[i]-'0');
+		cout<<yval[i];
+	}
+cout<<endl;
+	g0.x=complex(x,apint(0),1);
+	g0.y=complex(y,apint(0),1);
+
+	if(!g0.on_curve())
+		cout<<"WTF!"<<endl;
+	
 }

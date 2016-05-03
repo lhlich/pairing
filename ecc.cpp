@@ -2,7 +2,7 @@
 
 
 complex complex::operator+(const complex  &right){
-	modulo_arithmic Q = modulo_arithmic(MODULO);
+	modulo_arithmic Q = getQ();
 
 	complex res;
 
@@ -13,7 +13,7 @@ complex complex::operator+(const complex  &right){
 	return res;
 }
 complex complex::operator-(const complex &right) const{
-	modulo_arithmic Q = modulo_arithmic(MODULO);
+	modulo_arithmic Q = getQ();
 
 	complex res;
 
@@ -24,8 +24,8 @@ complex complex::operator-(const complex &right) const{
 	return res;
 }
 
-complex complex::operator*(const complex &right){
-	modulo_arithmic Q = modulo_arithmic(MODULO);
+complex complex::operator*(const complex &right) const{
+	modulo_arithmic Q = getQ();
 
 	complex res;
 
@@ -64,7 +64,7 @@ complex complex::pow(const apint &n){
 }
 
 complex complex::neg() const{
-	modulo_arithmic Q = modulo_arithmic(MODULO);
+	modulo_arithmic Q = getQ();
 
 	complex res;
 
@@ -77,7 +77,7 @@ complex complex::neg() const{
 
 }
 complex complex::inv() const{
-	modulo_arithmic Q = modulo_arithmic(MODULO);
+	modulo_arithmic Q = getQ();
 
 	complex res;
 
@@ -190,11 +190,11 @@ point operator*(const apint &s,const point &P){
 
 		for (int i = 2; i <= s.bits(); i++){
 			res = TWO*res;
-			res.on_curve();
+			//res.on_curve();
 
 			if (s.checkbit(i)){
 				res = res+P;
-				res.on_curve();
+			//	res.on_curve();
 			}
 		}
 	}
@@ -205,4 +205,31 @@ point operator*(int s,const point &P){
 	apint S(s);
 	point res=S*P;
 	return res;
+}
+
+modulo_arithmic getQ(){
+	apint m(0);
+	apint ten(10);
+	int i;
+
+	const char* qval="87807107996633125224377819847540498158068831994142082110286";//len 59
+	const char* qval2="5339926647563088022295707862517942266222142315585876958231745";//len 61
+	const char* qval3="9277713367317481324925129998224791";//len 34
+	
+	for(i=0;i<59;i++){
+		m=m*ten;
+		m=m+apint(qval[i]-'0');
+	}
+	for(i=0;i<61;i++){
+		m=m*ten;
+		m=m+apint(qval2[i]-'0');
+	}
+	for(i=0;i<34;i++){
+		m=m*ten;
+		m=m+apint(qval3[i]-'0');
+	}
+	
+	if(!LIGHT)return modulo_arithmic(m);
+	return modulo_arithmic(MODULO);
+
 }

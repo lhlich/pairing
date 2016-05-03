@@ -1,5 +1,6 @@
 #include "header/arbitrary_precision.h"
-
+#include <iostream>
+using namespace std;
 
 apint::apint(){
 	data = new unsigned int[1];
@@ -204,10 +205,26 @@ int apint::bits() const{
 	}
 	return counter + (length - 1) * 32;
 }
+apint apint::operator>>(const int& n) const{
+	apint res=apint(0);
+	int l=bits();
+	//cout<<"l:"<<l<<" n:"<<n<<endl;
+	for(int i=1;i<=l-n;i++){
+		//cout<<"copying bit No."<<i<<endl;
+		res=res<<1;
+		//cout<<"copying bit No."<<i<<endl;
+		if(checkbit(i))
+			res.data[res.length-1]|=1;
+	}
+	return res;
+}
 
 apint apint::operator<<(const int& n) const{
+	if(zero())return *this;
+
 	apint res;
-	int NoB = this->bits();//number of bits
+
+	int NoB = bits();//number of bits
 
 	res.length = (NoB + n) / 32 + 1;
 	res.data = new unsigned int[res.length];
@@ -241,12 +258,13 @@ apint apint::operator<<(const int& n) const{
 
 		res.data[i] = temp;
 	}
+	res.remove_prefix();
 
 	
 	return res;
 }
 
-bool apint::checkbit(int &pos) const{//content of the pos'th bit
+bool apint::checkbit(int pos) const{//content of the pos'th bit
 	int leading = 32 - this->bits() % 32;
 	leading = leading % 32;
 
@@ -259,12 +277,11 @@ apint apint::div(const apint& right, apint &rem){
 	apint one(1);
 	apint temp;
 	int diff;
-
+	//cout<<right.data[right.length-1]<<endl;
 	while (op1 >= right){
 		diff = op1.bits() - right.bits();
 
 		if (diff > 1){
-
 			temp=(right << (diff - 1));
 			op1 = op1 - temp;
 

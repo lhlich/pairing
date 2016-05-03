@@ -1,6 +1,6 @@
-#include "header/pairing.h"
+//#include "header/pairing.h"
 //#include <iostream>
-//using namespace std;
+using namespace std;
 
 complex pairing::bi(const point &a,const  point &b){
 	point temp;
@@ -43,18 +43,50 @@ complex pairing::tr(const point &P,const point &Q){
 	point Z(P);
 
 	for(int i = 2; i <= r.bits(); i++){
-//		cout<<"iteration bit"<<i<<endl;
 		
 		x=x*x*line(Z,Z,Q)/line(2*Z,(2*Z).inv(),Q);
-
 		Z = 2*Z;
 
 		if (r.checkbit(i)){
 			x=x*line(Z,P,Q)/line(Z+P,(Z+P).inv(),Q);
 			Z=Z+P;
-
 		}
 	}
-
 	return x;
+}
+void pairing::load(){
+
+	//cout<<"loading hval and rval...";
+	const char*	hval="12016012264891146079388821366740534204802954401251311822919615131047207289359704531102844802183906537786776";//len 107
+	const char* rval="730750818665451621361119245571504901405976559617"; //len 48
+	
+	//cout<<"Done!"<<endl;
+	
+	h=apint(0);
+	r=apint(0);
+	apint ten(10);
+	int i;
+
+	//cout<<"importing hval ...";
+	for(i=0;i<107;i++){
+		h=h*ten;
+		h=h+apint(hval[i]-'0');
+	}
+	//cout<<"Done!"<<endl;
+
+	//cout<<"importing rval ...";
+	for(i=0;i<48;i++){
+	//	cout<<"the "<<i<<"th bit"<<endl;
+		r=r*ten;
+		r=r+apint(rval[i]-'0');
+	}
+	//cout<<"Done!"<<endl;
+
+	//cout<<"calculating qk1r...";
+	apint qq=getQ().p;
+	qk1r=(qq-apint(1))*h;
+//	cout<<"Done!"<<endl;
+
+	q=getQ();
+	
 }
